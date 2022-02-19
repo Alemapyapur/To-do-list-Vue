@@ -1,14 +1,14 @@
 <template>
-  <div class="body">
-    <HeaderVue />
+  <div class="main">
+    <HeaderVue class="title" />
 
-    <section class="container">
-      <form @submit.prevent="addTodoToList" class="card">
+      <form @submit.prevent="addTodoToList" class="form">
         <div class="todo-top">
           <input
             type="text"
             name="todo"
             id="todo"
+            placeholder="Escribe tu tarea aquí"
             v-model="todoText"
             class="todo-input"
           />
@@ -16,10 +16,10 @@
             <span v-if="currentEditIndex == -1" class="agregar">Agregar</span>
             <span v-else class="guardar">Guardar</span>
           </button>
-          <button @click="check">Marcar Todo</button>
+          <button @click="check" class="todo-button">Marcar Todo</button>
         </div>
       </form>
-      <div class="todo-lista">
+      <div class="tasks">
         <div v-for="(todo, index) in todos" class="todo-item" :key="todo.id">
           {{ task.name }}
           <div class="left">
@@ -31,42 +31,19 @@
 
           <div class="right">
             <button class="editar" @click="editTodo(index)">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                width="16"
-                height="16"
-              >
-                <path fill="none" d="M0 0h24v24H0z" />
-                <path
-                  d="M21 6.757l-2 2V4h-9v5H5v11h14v-2.757l2-2v5.765a.993.993 0 0 1-.993.992H3.993A1 1 0 0 1 3 20.993V8l6.003-6h10.995C20.55 2 21 2.455 21 2.992v3.765zm.778 2.05l1.414 1.415L15.414 18l-1.416-.002.002-1.412 7.778-7.778z"
-                  fill="rgba(36,195,61,1)"
-                />
-              </svg>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14"><path fill="none" d="M0 0h24v24H0z"/><path d="M9.243 19H21v2H3v-4.243l9.9-9.9 4.242 4.244L9.242 19zm5.07-13.556l2.122-2.122a1 1 0 0 1 1.414 0l2.829 2.829a1 1 0 0 1 0 1.414l-2.122 2.121-4.242-4.242z" fill="rgba(255,255,255,1)"/></svg>
             </button>
             <button class="eliminar" @click="removeTodo(index)">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                width="16"
-                height="16"
-              >
-                <path fill="none" d="M0 0h24v24H0z" />
-                <path
-                  d="M17 4h5v2h-2v15a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6H2V4h5V2h10v2zM9 9v8h2V9H9zm4 0v8h2V9h-2z"
-                  fill="rgba(255,0,0,1)"
-                />
-              </svg>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14"><path fill="none" d="M0 0h24v24H0z"/><path d="M6.535 3H21a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H6.535a1 1 0 0 1-.832-.445l-5.333-8a1 1 0 0 1 0-1.11l5.333-8A1 1 0 0 1 6.535 3zM13 10.586l-2.828-2.829-1.415 1.415L11.586 12l-2.829 2.828 1.415 1.415L13 13.414l2.828 2.829 1.415-1.415L14.414 12l2.829-2.828-1.415-1.415L13 10.586z" fill="rgba(255,255,255,1)"/></svg>
             </button>
           </div>
         </div>
+        <p class="text-empty" v-if="todos.length === 0">
+          La Lista de Tareas esta vacía.
+        </p>
       </div>
-      <p class="text-empty" v-if="todos.length === 0">
-        La Lista de Tareas esta vacía.
-      </p>
-    </section>
 
-    <FooterVue />
+    <FooterVue class="footer" />
   </div>
 </template>
 
@@ -128,7 +105,7 @@ export default {
     }
 
     function addText (toDo) {
-      todos.done = !toDo.done // buleanos (true or false, of done)
+      toDo.isDone = !toDo.isDone // buleanos (true or false, of done)
     }
     return {
       todoText,
@@ -152,36 +129,97 @@ export default {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-.container {
+.main {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 10vh 20vh 60vh 10vh;
+  gap: 0px 0px;
+  grid-auto-flow: row;
+  justify-items: center;
+  align-items: center;
+  justify-content: center;
+  grid-template-areas:
+    'tittle'
+    'form'
+    'tasks'
+    'footer';
+  background: #334d50; /* fallback for old browsers */
+  background: linear-gradient( to right, #cbcaa5, #334d50 );
+}
+
+.tittle {
+  grid-area: tittle;
+}
+
+.form {
+  grid-area: form;
   display: flex;
   justify-content: center;
-  align-items: center;
-  flex-direction: column;
+  width: 100%;
 }
 
-.card {
-  display: flex;
-  flex-direction: column;
-  background: blueviolet;
+.tasks {
+  grid-area: tasks;
+  overflow-x: overlay;
+  overflow-y: overlay;
+  height: -webkit-fill-available;
+  width: 80%;
+}
+
+.tasks button:hover {
+  transform: scale(1.2);
+}
+
+.tasks::-webkit-scrollbar {
+  width: 10px;
+  height: 5px;
+}
+
+.tasks::-webkit-scrollbar-thumb {
+  background: gray;
   border-radius: 10px;
-  margin: 20px;
-  padding: 10px;
 }
 
-.todo-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 300px;
+.tasks::-webkit-scrollbar {
+  background: rgba(128, 128, 128, 0);
+}
+
+.footer {
+  grid-area: footer;
+}
+
+.todo-button {
+  font-size: 12px;
+  width: 100px;
+  margin: 10px;
+  font-family: Arial;
+  border-width: 1px;
+  padding: 10px;
+  color: #030303;
+  border-color: #dcdcdc;
+  font-weight: bold;
+  border-radius: 6px;
+  box-shadow: inset 0px 1px 0px 0px #ffffff;
+  background: linear-gradient(#818181, #f3e6e6);
+}
+
+.todo-button:hover {
+  background: linear-gradient(#f6f6f6, #ffffff);
 }
 
 .left {
   display: flex;
   align-items: center;
 }
+
 .todo-input {
   border: none;
   background: whitesmoke;
+  height: 37px;
+  border-radius: 4px;
+  width: 300px;
+  padding: 10px;
+  margin-right: 10px;
 }
 
 .isDone {
@@ -193,10 +231,22 @@ export default {
   margin-right: 10px;
 }
 
+.todo-item {
+  display: flex;
+  justify-content: space-between;
+  background-color: rgb(240, 245, 245);
+  box-shadow: 23px 23px 6px -4px rgba(0, 0, 0, 0.1);
+  padding: 5px 10px 5px 10px;
+  margin: 4px;
+  border-radius: 4px;
+}
 .eliminar,
 .editar {
   border: none;
-  background: none;
+  background: black;
+  padding: 4px;
+  border-radius: 3px;
+  margin: 4px;
 }
 
 .text-empty {

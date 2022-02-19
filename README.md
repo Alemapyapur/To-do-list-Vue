@@ -3,8 +3,8 @@
 
 To do list realizado con Vue.
 
-- [Demo](to-do-list-vue-pam.netlify.app)
-- [Código](to-do-list-vue-pam.netlify.app)
+- [Demo](https://to-do-list-vue-pam.netlify.app/)
+- [Código](https://github.com/Alemapyapur/To-do-list-Vue/)
 
 ![](src/assets/home.png)
 
